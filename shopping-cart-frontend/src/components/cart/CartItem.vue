@@ -44,10 +44,12 @@ export default {
       });
     },
     decrementQuantity() {
-      this.$store.dispatch("updateCartItemQuantity", {
-        productId: this.cartItem.productId,
-        quantity: Math.max(this.cartItem.quantity - 1, 1),
-      });
+      if (this.cartItem.quantity > 1) {
+        this.$store.dispatch("updateCartItemQuantity", {
+          productId: this.cartItem.productId,
+          quantity: this.cartItem.quantity - 1,
+        });
+      }
     },
   },
 };
