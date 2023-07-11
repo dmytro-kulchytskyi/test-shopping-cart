@@ -1,19 +1,19 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
-import Cart from '../components/cart/Cart.vue';
-import ProductList from '../components/product/ProductsList.vue';
+import Cart from "../components/cart/Cart.vue";
+import ProductList from "../components/product/ProductsList.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
-    path: '/products',
-    component: ProductList
+    path: "/products",
+    component: ProductList,
   },
   {
-    path: '/cart',
-    component: Cart
+    path: "/cart",
+    component: Cart,
   },
   {
-    path: '/',
-    redirect: '/products'
+    path: "/",
+    redirect: "/products",
   },
 ];
 

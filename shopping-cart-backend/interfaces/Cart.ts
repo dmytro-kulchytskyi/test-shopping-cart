@@ -4,6 +4,6 @@ export class Cart {
     id: string;
     userId: string;
     isGuestCart: boolean;
-    iteams: CartItem[];
+    items: CartItem[] = [];
     total: number = 0;
 }

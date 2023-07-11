@@ -19,6 +19,7 @@ export class CartService {
             return cart;
         }
         const newCart = new Cart();
+        newCart.userId = userId;
         newCart.total = 0;
         newCart.id = '123';
         newCart.isGuestCart = false;
@@ -29,6 +30,10 @@ export class CartService {
 
 
     async addProduct(userId: string, productId: string, quantity: number): Promise<void> {
+        if (quantity < 1) {
+            throw new Error('InvalidQuantity');
+        }
+
         const cart = await this.getOrCreateCartByUserId(userId);
 
         const product = await this.productService.getProductById(productId);
@@ -36,7 +41,7 @@ export class CartService {
             throw new Error('InvalidProductId');
         }
 
-        const cartItem = cart.iteams.find((i: CartItem) => i.productId === productId);
+        const cartItem = cart.items.find((i: CartItem) => i.productId === productId);
         if (cartItem) {
             cartItem.quantity += quantity;
         } else {
@@ -44,11 +49,15 @@ export class CartService {
             newCartItem.productId = productId;
             newCartItem.product = product;
             newCartItem.quantity = quantity;
-            cart.iteams.push(newCartItem);
+            cart.items.push(newCartItem);
         }
     }
 
-    async achangeProductQuantity(userId: string, productId: string, quantity: number): Promise<void> {
+    async changeProductQuantity(userId: string, productId: string, quantity: number): Promise<void> {
+        if (quantity < 1) {
+            throw new Error('InvalidQuantity');
+        }
+
         const cart = await this.getOrCreateCartByUserId(userId);
 
         const product = await this.productService.getProductById(productId);
@@ -56,9 +65,9 @@ export class CartService {
             throw new Error('InvalidProductId');
         }
 
-        const cartItem = cart.iteams.find((i: CartItem) => i.productId === productId);
+        const cartItem = cart.items.find((i: CartItem) => i.productId === productId);
         if (cartItem) {
-            cartItem.quantity += quantity;
+            cartItem.quantity = quantity;
         } else {
             throw new Error('NotInCart');
         }
@@ -72,22 +81,25 @@ export class CartService {
             throw new Error('InvalidProductId');
         }
 
-        const cartItem = cart.iteams.find((i: CartItem) => i.productId === productId);
+        const cartItem = cart.items.find((i: CartItem) => i.productId === productId);
         if (!cartItem) {
             throw new Error('NotInCart');
         } else {
-            cart.iteams.splice(cart.iteams.indexOf(cartItem), 1);
+            cart.items.splice(cart.items.indexOf(cartItem), 1);
         }
     }
 
     async cleartCart(userId: string): Promise<void> {
         const cart = await this.getOrCreateCartByUserId(userId);
 
-        cart.iteams = [];
+        cart.items = [];
     }
 
     private async calculateTotal(cart: Cart): Promise<void> {
-        const total = cart.iteams.reduce((total, i) => total + i.product.price, 0);
+        const total = cart.items.reduce((total, i) => {
+            i.total = i.quantity * i.product.price;
+            return total + i.total;
+        }, 0);
         cart.total = total;
     }
 }

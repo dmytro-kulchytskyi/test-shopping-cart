@@ -1,7 +1,7 @@
 export interface IProductItem {
-    id: string;
-    title: string;
-    description: string;
-    image: string;
-    price: number;
+  id: string;
+  title: string;
+  description: string;
+  image: string;
+  price: number;
 }

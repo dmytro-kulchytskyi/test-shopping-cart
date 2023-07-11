@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express'; 
 import { AddToCartRequestBody } from '../interfaces/AddToCartRequestBody';
-import { CartService } from '../servies/cartService';
+import { CartService } from '../servieces/cartService';
 
 const router = Router();
 
@@ -31,7 +31,7 @@ router.patch('/', async (req, res) => {
     const { productId, quantity }: AddToCartRequestBody = req.body;
 
     try {
-        await cartService.achangeProductQuantity(userId, productId, quantity);
+        await cartService.changeProductQuantity(userId, productId, quantity);
     } catch (error) {
         res.status(400).send(error.message); 
     }
